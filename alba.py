@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import csv
 
 URL = "http://www.alba.co.kr/"
 
@@ -49,7 +50,7 @@ def get_job_details(jobs):
         else:
             date = str(date).replace('<strong>', '').replace('</strong>', '')
         job_list.append({'place': place, 'title': title, 'time': time,
-                         'pay_icon': pay_icon, 'pay_number': pay_number, 'date': date})
+                         'pay': pay_icon + pay_number, 'date': date})
 
     return job_list
 
@@ -66,6 +67,15 @@ def get_jobs(url):
     return job_list
 
 
+def save_to_file(company, job_list):
+    file = open(f"{company}.csv", mode="w")
+    writer = csv.writer(file)
+    writer.writerow(["place", "title", "time", "pay", "date"])
+    for job in job_list:
+        writer.writerow(list(job.values()))
+    return
+
+
 # 메인 페이지에서 브랜드 리스트 추출
 brands = get_brands()
 
@@ -73,4 +83,5 @@ brands = get_brands()
 for brand in brands:
     company = brand['company']
     url = brand['url']
-    print(get_jobs(url))  # 각 브랜드의 채용 리스트 반환
+    job_list = get_jobs(url)  # 각 브랜드의 채용 리스트 반환
+    save_to_file(company, job_list)
