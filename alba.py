@@ -68,7 +68,7 @@ def get_jobs(url):
 
 
 def save_to_file(company, job_list):
-    file = open(f"{company}.csv", mode="w")
+    file = open(f"{company}.csv", mode="w", encoding="utf_16")
     writer = csv.writer(file)
     writer.writerow(["place", "title", "time", "pay", "date"])
     for job in job_list:
